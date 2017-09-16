@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import Axios from "axios"
 
 class Saved extends Component {
+	state = {
+		saved: []
+	}
+
 	componentDidMount() {
-		console.log("mounted")
 		Axios.get("/api/saved")
 			.then(res => {
 				console.log(res);

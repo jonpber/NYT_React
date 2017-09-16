@@ -4,22 +4,29 @@ var path = require("path");
 var app = express();
 // var method = require("method-override");
 var mongoose = require("mongoose");
-var react = require ("react");
+var Article = require("./models/Article.js");
 
-mongoose.connect("mongodb://localhost/nytreact");
-
-var router = require(path.join(__dirname, "controllers", "nyt_controller.js"));
+// mongoose.connect("mongodb://heroku_kgl3j6hw:v2c89odgjfsltmrr423aq7c0bj@ds135444.mlab.com:35444/heroku_kgl3j6hw");
+var db = mongoose.connection;
+mongoose.Promise = Promise;
 
 var port = process.env.PORT || 7000;
 
 app.use(body.json()); // support json encoded bodies
 app.use(body.urlencoded({ extended: true })); // support encoded bodies
 
-app.use(express.static(path.join('public')));
-
+app.use(express.static('public'));
 // app.use(method("_method"));
 
-app.use("/", router);
+app.get("/api/saved", function(req, res){
+	Article.find({}).exec(function(error, data){
+		res.json(data);
+	})
+})
+
+app.get("*", function(req, res){
+	res.sendFile(__dirname + "/public/index.html");
+})
 
 
 app.listen(port, function(error){
